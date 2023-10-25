@@ -18,6 +18,12 @@ const tableRowStyles = {
 
 function TableEntries() {
   const [expenses, setExpenses] = useState([]);
+  const [columnTotals, setColumnTotals] = useState({
+    situation1: 0,
+    situation2: 0,
+    situation3: 0,
+    situation4: 0,
+  });
 
   useEffect(() => {
     const savedData = localStorage.getItem("expensesData");
@@ -27,13 +33,29 @@ function TableEntries() {
 
       const transformedData = Object.keys(parsedData).map((expenseName) => ({
         name: expenseName,
-        situation1: parsedData[expenseName].situation1 || "-",
-        situation2: parsedData[expenseName].situation2 || "-",
-        situation3: parsedData[expenseName].situation3 || "-",
-        situation4: parsedData[expenseName].situation4 || "-",
+        situation1: parsedData[expenseName].situation1 || 0,
+        situation2: parsedData[expenseName].situation2 || 0,
+        situation3: parsedData[expenseName].situation3 || 0,
+        situation4: parsedData[expenseName].situation4 || 0,
       }));
 
       setExpenses(transformedData);
+
+      // Calculate column totals
+      const totals = {
+        situation1: 0,
+        situation2: 0,
+        situation3: 0,
+        situation4: 0,
+      };
+      transformedData.forEach((expense) => {
+        totals.situation1 += expense.situation1;
+        totals.situation2 += expense.situation2;
+        totals.situation3 += expense.situation3;
+        totals.situation4 += expense.situation4;
+      });
+
+      setColumnTotals(totals);
     }
   }, []);
 
@@ -99,6 +121,27 @@ function TableEntries() {
                     <TableCell>{expense.situation4}</TableCell>
                   </TableRow>
                 ))}
+                {expenses.length > 0 && (
+                  <TableRow sx={tableRowStyles}>
+                    <TableCell
+                      sx={{ fontWeight: "bold", p: 0, fontSize: "17px" }}
+                    >
+                      Total
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold", fontSize: "17px" }}>
+                      {columnTotals.situation1}
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold", fontSize: "17px" }}>
+                      {columnTotals.situation2}
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold", fontSize: "17px" }}>
+                      {columnTotals.situation3}
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold", fontSize: "17px" }}>
+                      {columnTotals.situation4}
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </TableContainer>

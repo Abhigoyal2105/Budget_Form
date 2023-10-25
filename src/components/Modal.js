@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Box,
@@ -21,115 +21,115 @@ import CloseIcon from "@mui/icons-material/Close";
 const initialExpenses = [
   {
     name: "Rent/Mortgage",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Housing Voucher",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Real Estate Taxes",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Repairs/Maintenance",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Association Dues",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Homeowner/Renters Insurance",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Electricity",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Gas",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Water",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Trash",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Home Phone",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Internet & Cable",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Food: Grocery",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Food: Restaurant",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Laundry",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
   {
     name: "Other",
-    situation1: "",
-    situation2: "",
-    situation3: "",
-    situation4: "",
+    situation1: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation2: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation3: localStorage.getItem("Rent/Mortgage_situation1") || "",
+    situation4: localStorage.getItem("Rent/Mortgage_situation1") || "",
   },
 ];
 
@@ -142,6 +142,35 @@ const tableRowStyles = {
 function ModalForm({ isOpen, onClose }) {
   const [expenses, setExpenses] = useState(initialExpenses);
 
+  useEffect(() => {
+    const localData = localStorage.getItem("expensesData");
+
+    if (localData) {
+      try {
+        const parsedData = JSON.parse(localData);
+
+        const updatedExpenses = initialExpenses.map((expense) => {
+          const name = expense.name;
+          if (parsedData[name]) {
+            return {
+              ...expense,
+              situation1: parsedData[name].situation1 || null,
+              situation2: parsedData[name].situation2 || null,
+              situation3: parsedData[name].situation3 || null,
+              situation4: parsedData[name].situation4 || null,
+            };
+          } else {
+            return expense;
+          }
+        });
+
+        setExpenses(updatedExpenses);
+      } catch (error) {
+        console.error("Error parsing data from local storage:", error);
+      }
+    }
+  }, []);
+
   const handleExpenseChange = (index, field, value) => {
     const updatedExpenses = [...expenses];
     updatedExpenses[index][field] = parseFloat(value);
@@ -150,7 +179,6 @@ function ModalForm({ isOpen, onClose }) {
 
   const handleSave = () => {
     const savedValues = {};
-
     expenses.forEach((expense) => {
       savedValues[expense.name] = {
         situation1: expense.situation1,
