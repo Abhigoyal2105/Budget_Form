@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   Box,
@@ -13,131 +13,156 @@ import {
   IconButton,
   Button,
   Grid,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-const expenses = [
+const initialExpenses = [
   {
     name: "Rent/Mortgage",
-    situation1: "$12",
-    situation2: "$213",
-    situation3: "$3",
-    situation4: "$231",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Housing Voucher",
-    situation1: "$2",
-    situation2: "$2",
-    situation3: "$23121",
-    situation4: "$231",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Real Estate Taxes",
-    situation1: "$22",
-    situation2: "$22313",
-    situation3: "$21",
-    situation4: "$231",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Repairs/Maintenance",
-    situation1: "$23213",
-    situation2: "$231",
-    situation3: "$2121321",
-    situation4: "$2312",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Association Dues",
-    situation1: "$213",
-    situation2: "$231",
-    situation3: "$3231",
-    situation4: "$231231",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Homeowner/Renters Insurance",
-    situation1: "$212",
-    situation2: "$231",
-    situation3: "$213",
-    situation4: "$213",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Electricity",
-    situation1: "$213",
-    situation2: "$312",
-    situation3: "$213231",
-    situation4: "$31",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Gas",
-    situation1: "$231",
-    situation2: "$31231",
-    situation3: "$231",
-    situation4: "$231",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Water",
-    situation1: "$213231",
-    situation2: "$2132",
-    situation3: "$21",
-    situation4: "$213",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Trash",
-    situation1: "$3",
-    situation2: "$2121",
-    situation3: "$321",
-    situation4: "$231",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Home Phone",
-    situation1: "$3231",
-    situation2: "$213",
-    situation3: "$212",
-    situation4: "$21",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Internet & Cable",
-    situation1: "$2121",
-    situation2: "$209",
-    situation3: "$213231",
-    situation4: "$321",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Food: Grocery",
-    situation1: "$213",
-    situation2: "$21",
-    situation3: "$3231",
-    situation4: "$23",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Food: Restaurant",
-    situation1: "$2121",
-    situation2: "$2121",
-    situation3: "$1213",
-    situation4: "$231",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Laundry",
-    situation1: "$2313213",
-    situation2: "$213",
-    situation3: "$23121321",
-    situation4: "$213231",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
   {
     name: "Other",
-    situation1: "$213231231",
-    situation2: "$223113",
-    situation3: "$12",
-    situation4: "$32321",
+    situation1: "",
+    situation2: "",
+    situation3: "",
+    situation4: "",
   },
 ];
 
 const tableRowStyles = {
   "&:not(:last-child) > td": {
-    borderBottom: "none", // Remove the border for all rows except the last one
+    borderBottom: "none",
   },
 };
 
 function ModalForm({ isOpen, onClose }) {
+  const [expenses, setExpenses] = useState(initialExpenses);
+
+  const handleExpenseChange = (index, field, value) => {
+    const updatedExpenses = [...expenses];
+    updatedExpenses[index][field] = parseFloat(value);
+    setExpenses(updatedExpenses);
+  };
+
+  const handleSave = () => {
+    const savedValues = {};
+
+    expenses.forEach((expense) => {
+      savedValues[expense.name] = {
+        situation1: expense.situation1,
+        situation2: expense.situation2,
+        situation3: expense.situation3,
+        situation4: expense.situation4,
+      };
+    });
+    onClose();
+
+    localStorage.setItem("expensesData", JSON.stringify(savedValues));
+  };
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box
@@ -184,7 +209,7 @@ function ModalForm({ isOpen, onClose }) {
                       fontSize: "17px",
                     }}
                   >
-                    Expense
+                    Housing Expenses
                   </TableCell>
                   <TableCell
                     sx={{
@@ -193,7 +218,7 @@ function ModalForm({ isOpen, onClose }) {
                       fontSize: "17px",
                     }}
                   >
-                    Situation 1
+                    Current Situation
                   </TableCell>
                   <TableCell
                     sx={{
@@ -224,10 +249,78 @@ function ModalForm({ isOpen, onClose }) {
                     <TableCell sx={{ fontWeight: "bold", py: 2.3 }}>
                       {expense.name}
                     </TableCell>
-                    <TableCell>{expense.situation1}</TableCell>
-                    <TableCell>{expense.situation2}</TableCell>
-                    <TableCell>{expense.situation3}</TableCell>
-                    <TableCell>{expense.situation4}</TableCell>
+                    <TableCell>
+                      <TextField
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">$</InputAdornment>
+                          ),
+                        }}
+                        value={expense.situation1}
+                        type="number"
+                        onChange={(e) =>
+                          handleExpenseChange(
+                            index,
+                            "situation1",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">$</InputAdornment>
+                          ),
+                        }}
+                        value={expense.situation2}
+                        type="number"
+                        onChange={(e) =>
+                          handleExpenseChange(
+                            index,
+                            "situation2",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">$</InputAdornment>
+                          ),
+                        }}
+                        value={expense.situation3}
+                        type="number"
+                        onChange={(e) =>
+                          handleExpenseChange(
+                            index,
+                            "situation3",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">$</InputAdornment>
+                          ),
+                        }}
+                        value={expense.situation4}
+                        type="number"
+                        onChange={(e) =>
+                          handleExpenseChange(
+                            index,
+                            "situation4",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -238,8 +331,10 @@ function ModalForm({ isOpen, onClose }) {
                 sx={{
                   backgroundColor: "#EDA23E",
                   fontWeight: "bold",
-                  textTransform: "none" 
+                  textTransform: "none",
+                  mr: 2,
                 }}
+                onClick={handleSave}
               >
                 Save
               </Button>
