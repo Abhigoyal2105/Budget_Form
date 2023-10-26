@@ -41,7 +41,6 @@ function TableEntries() {
 
       setExpenses(transformedData);
 
-      // Calculate column totals
       const totals = {
         situation1: 0,
         situation2: 0,
