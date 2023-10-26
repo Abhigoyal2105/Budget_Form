@@ -143,7 +143,7 @@ const tableRowStyles = {
   },
 };
 
-function ModalForm({ isOpen, onClose }) {
+function ModalForm({ isOpen, onClose, onFormSubmit }) {
   const [expenses, setExpenses] = useState(initialExpenses);
 
   useEffect(() => {
@@ -158,10 +158,10 @@ function ModalForm({ isOpen, onClose }) {
           if (parsedData[name]) {
             return {
               ...expense,
-              situation1: parsedData[name].situation1 || null,
-              situation2: parsedData[name].situation2 || null,
-              situation3: parsedData[name].situation3 || null,
-              situation4: parsedData[name].situation4 || null,
+              situation1: parsedData[name].situation1 || "",
+              situation2: parsedData[name].situation2 || "",
+              situation3: parsedData[name].situation3 || "",
+              situation4: parsedData[name].situation4 || "",
             };
           } else {
             return expense;
@@ -195,6 +195,8 @@ function ModalForm({ isOpen, onClose }) {
 
     localStorage.setItem("expensesData", JSON.stringify(savedValues));
     window.dispatchEvent(new Event("storageEvent"));
+
+    onFormSubmit(savedValues);
   };
   return (
     <Modal open={isOpen} onClose={onClose}>

@@ -1,11 +1,18 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import Modal from "./Modal";
+import ModalForm from "./Modal";
 
-function FormButton() {
+function FormButton({ onFormDataChange }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState(null);
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const handleFormSubmit = (data) => {
+    setFormData(formData);
+    onFormDataChange(data);
+  };
 
   return (
     <div>
@@ -16,7 +23,11 @@ function FormButton() {
       >
         Add / Edit Info
       </Button>
-      <Modal isOpen={isModalOpen} onClose={closeModal} />
+      <ModalForm
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onFormSubmit={handleFormSubmit}
+      />
     </div>
   );
 }

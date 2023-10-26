@@ -2,7 +2,11 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 import FormButton from "../components/FormButton";
 
-function ProjectHeading() {
+function ProjectHeading({ onFormDataChange }) {
+  const handleFormDataChange = (data) => {
+    onFormDataChange(data);
+  };
+
   return (
     <Grid container spacing={0}>
       <Grid item xs={8}>
@@ -11,7 +15,7 @@ function ProjectHeading() {
         </h2>
       </Grid>
       <Grid item xs={4} container justifyContent="flex-end" sx={{ pt: 2 }}>
-        <FormButton />
+        <FormButton onFormDataChange={handleFormDataChange} />
       </Grid>
     </Grid>
   );

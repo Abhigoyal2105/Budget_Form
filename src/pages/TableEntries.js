@@ -16,7 +16,7 @@ const tableRowStyles = {
   },
 };
 
-function TableEntries() {
+function TableEntries({ formData }) {
   const [expenses, setExpenses] = useState([]);
   const [columnTotals, setColumnTotals] = useState({
     situation1: 0,
@@ -26,37 +26,54 @@ function TableEntries() {
   });
 
   useEffect(() => {
-    const savedData = localStorage.getItem("expensesData");
-
-    if (savedData) {
-      const parsedData = JSON.parse(savedData);
-
-      const transformedData = Object.keys(parsedData).map((expenseName) => ({
-        name: expenseName,
-        situation1: parsedData[expenseName].situation1 || 0,
-        situation2: parsedData[expenseName].situation2 || 0,
-        situation3: parsedData[expenseName].situation3 || 0,
-        situation4: parsedData[expenseName].situation4 || 0,
-      }));
-
-      setExpenses(transformedData);
-
+    const calculateTotals = (data) => {
       const totals = {
         situation1: 0,
         situation2: 0,
         situation3: 0,
         situation4: 0,
       };
-      transformedData.forEach((expense) => {
+      data.forEach((expense) => {
         totals.situation1 += expense.situation1;
         totals.situation2 += expense.situation2;
         totals.situation3 += expense.situation3;
         totals.situation4 += expense.situation4;
       });
+      return totals;
+    };
 
+    if (formData) {
+      const transformedData = Object.keys(formData).map((expenseName) => ({
+        name: expenseName,
+        situation1: formData[expenseName].situation1 || 0,
+        situation2: formData[expenseName].situation2 || 0,
+        situation3: formData[expenseName].situation3 || 0,
+        situation4: formData[expenseName].situation4 || 0,
+      }));
+
+      setExpenses(transformedData);
+
+      const totals = calculateTotals(transformedData);
       setColumnTotals(totals);
+
+      localStorage.setItem("expensesData", JSON.stringify(formData));
+    } else {
+      const savedData = localStorage.getItem("expensesData");
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+        const transformedData = Object.keys(parsedData).map((expenseName) => ({
+          name: expenseName,
+          situation1: parsedData[expenseName].situation1 || 0,
+          situation2: parsedData[expenseName].situation2 || 0,
+          situation3: parsedData[expenseName].situation3 || 0,
+          situation4: parsedData[expenseName].situation4 || 0,
+        }));
+        setExpenses(transformedData);
+        const totals = calculateTotals(transformedData);
+        setColumnTotals(totals);
+      }
     }
-  }, []);
+  }, [formData]);
 
   return (
     <div>
@@ -74,7 +91,7 @@ function TableEntries() {
                       pl: 0,
                     }}
                   >
-                    Expense
+                    Housing Expenses
                   </TableCell>
                   <TableCell
                     sx={{
@@ -83,7 +100,7 @@ function TableEntries() {
                       fontSize: "17px",
                     }}
                   >
-                    Situation 1
+                    Current Situation
                   </TableCell>
                   <TableCell
                     sx={{
@@ -114,30 +131,44 @@ function TableEntries() {
                     <TableCell sx={{ fontWeight: "bold", p: 0 }}>
                       {expense.name}
                     </TableCell>
-                    <TableCell>{expense.situation1}</TableCell>
-                    <TableCell>{expense.situation2}</TableCell>
-                    <TableCell>{expense.situation3}</TableCell>
-                    <TableCell>{expense.situation4}</TableCell>
+                    <TableCell>
+                      {expense.situation1 > 0 ? `$ ${expense.situation1}` : "-"}
+                    </TableCell>
+                    <TableCell>
+                      {expense.situation2 > 0 ? `$ ${expense.situation2}` : "-"}
+                    </TableCell>
+                    <TableCell>
+                      {expense.situation3 > 0 ? `$ ${expense.situation3}` : "-"}
+                    </TableCell>
+                    <TableCell>
+                      {expense.situation4 > 0 ? `$ ${expense.situation4}` : "-"}
+                    </TableCell>
                   </TableRow>
                 ))}
                 {expenses.length > 0 && (
                   <TableRow sx={tableRowStyles}>
-                    <TableCell
-                      sx={{ fontWeight: "bold", p: 0, fontSize: "17px" }}
-                    >
-                      Total
+                    <TableCell sx={{ fontWeight: "bold", p: 0 }}>
+                      Total Housing & Utility Expenses
                     </TableCell>
-                    <TableCell sx={{ fontWeight: "bold", fontSize: "17px" }}>
-                      {columnTotals.situation1}
+                    <TableCell>
+                      {columnTotals.situation1 > 0
+                        ? `$ ${columnTotals.situation1}`
+                        : "$ 0"}
                     </TableCell>
-                    <TableCell sx={{ fontWeight: "bold", fontSize: "17px" }}>
-                      {columnTotals.situation2}
+                    <TableCell>
+                      {columnTotals.situation2 > 0
+                        ? `$ ${columnTotals.situation2}`
+                        : "$ 0"}
                     </TableCell>
-                    <TableCell sx={{ fontWeight: "bold", fontSize: "17px" }}>
-                      {columnTotals.situation3}
+                    <TableCell>
+                      {columnTotals.situation3 > 0
+                        ? `$ ${columnTotals.situation3}`
+                        : "$ 0"}
                     </TableCell>
-                    <TableCell sx={{ fontWeight: "bold", fontSize: "17px" }}>
-                      {columnTotals.situation4}
+                    <TableCell>
+                      {columnTotals.situation4 > 0
+                        ? `$ ${columnTotals.situation4}`
+                        : "$ 0"}
                     </TableCell>
                   </TableRow>
                 )}
