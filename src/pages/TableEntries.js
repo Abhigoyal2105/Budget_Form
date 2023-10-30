@@ -25,23 +25,24 @@ function TableEntries({ formData }) {
     situation4: 0,
   });
 
-  useEffect(() => {
-    const calculateTotals = (data) => {
-      const totals = {
-        situation1: 0,
-        situation2: 0,
-        situation3: 0,
-        situation4: 0,
-      };
-      data.forEach((expense) => {
-        totals.situation1 += expense.situation1;
-        totals.situation2 += expense.situation2;
-        totals.situation3 += expense.situation3;
-        totals.situation4 += expense.situation4;
-      });
-      return totals;
+  // Define the calculateTotals function
+  const calculateTotals = (data) => {
+    const totals = {
+      situation1: 0,
+      situation2: 0,
+      situation3: 0,
+      situation4: 0,
     };
+    data.forEach((expense) => {
+      totals.situation1 += expense.situation1;
+      totals.situation2 += expense.situation2;
+      totals.situation3 += expense.situation3;
+      totals.situation4 += expense.situation4;
+    });
+    return totals;
+  };
 
+  useEffect(() => {
     if (formData) {
       const transformedData = Object.keys(formData).map((expenseName) => ({
         name: expenseName,
@@ -50,13 +51,13 @@ function TableEntries({ formData }) {
         situation3: formData[expenseName].situation3 || 0,
         situation4: formData[expenseName].situation4 || 0,
       }));
-
+  
       setExpenses(transformedData);
-
+  
       const totals = calculateTotals(transformedData);
       setColumnTotals(totals);
-
-      localStorage.setItem("expensesData", JSON.stringify(formData));
+  
+      // Don't write to local storage here
     } else {
       const savedData = localStorage.getItem("expensesData");
       if (savedData) {
@@ -69,11 +70,14 @@ function TableEntries({ formData }) {
           situation4: parsedData[expenseName].situation4 || 0,
         }));
         setExpenses(transformedData);
+  
+        // Recalculate totals here, not necessarily on every render
         const totals = calculateTotals(transformedData);
         setColumnTotals(totals);
       }
     }
   }, [formData]);
+  
 
   return (
     <div>
