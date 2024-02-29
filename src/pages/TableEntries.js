@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Paper,
@@ -8,7 +8,14 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  Button,
 } from "@mui/material";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+
+const containerStyles = {
+  padding: "20px",
+};
 
 const tableRowStyles = {
   "&:not(:last-child) > td": {
@@ -17,6 +24,8 @@ const tableRowStyles = {
 };
 
 function TableEntries({ formData }) {
+  const componentRef = useRef(null);
+
   const [expenses, setExpenses] = useState([]);
   const [columnTotals, setColumnTotals] = useState({
     situation1: 0,
@@ -25,7 +34,6 @@ function TableEntries({ formData }) {
     situation4: 0,
   });
 
-  // Define the calculateTotals function
   const calculateTotals = (data) => {
     const totals = {
       situation1: 0,
@@ -51,13 +59,11 @@ function TableEntries({ formData }) {
         situation3: formData[expenseName].situation3 || 0,
         situation4: formData[expenseName].situation4 || 0,
       }));
-  
+
       setExpenses(transformedData);
-  
+
       const totals = calculateTotals(transformedData);
       setColumnTotals(totals);
-  
-      // Don't write to local storage here
     } else {
       const savedData = localStorage.getItem("expensesData");
       if (savedData) {
@@ -70,19 +76,41 @@ function TableEntries({ formData }) {
           situation4: parsedData[expenseName].situation4 || 0,
         }));
         setExpenses(transformedData);
-  
-        // Recalculate totals here, not necessarily on every render
+
         const totals = calculateTotals(transformedData);
         setColumnTotals(totals);
       }
     }
   }, [formData]);
-  
+
+  const handleDownloadPDF = () => {
+    if (componentRef.current) {
+      html2canvas(componentRef.current).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "pt", "legal");
+
+        const margin = 40;
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+
+        pdf.addImage(
+          imgData,
+          "PNG",
+          margin,
+          margin,
+          pdfWidth - 2 * margin,
+          pdfHeight - 2 * margin
+        );
+
+        pdf.save("table_entries.pdf");
+      });
+    }
+  };
 
   return (
     <div>
       <Box sx={{ px: 5 }}>
-        <div>
+        <div ref={componentRef} style={containerStyles}>
           <TableContainer component={Paper}>
             <Table>
               <TableHead sx={{ fontWeight: "bold" }}>
@@ -180,6 +208,11 @@ function TableEntries({ formData }) {
             </Table>
           </TableContainer>
         </div>
+      </Box>
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <Button onClick={handleDownloadPDF} variant="outlined">
+          Download PDF
+        </Button>
       </Box>
     </div>
   );
